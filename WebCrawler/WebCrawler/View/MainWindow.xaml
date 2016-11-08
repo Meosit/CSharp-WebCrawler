@@ -1,0 +1,19 @@
+﻿<Window x:Class="WebCrawler.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:WebCrawler"
+        xmlns:viewModel="clr-namespace:WebCrawler.ViewModel"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="350" Width="525">
+    <Grid>
+        <Grid.DataContext>
+            <viewModel:WebCrawlerViewModel/>
+        </Grid.DataContext>
+        <TreeView Grid.Column="0" x:Name="treeView" Margin="0,0,90,0"/>
+        <Button x:Name="StartButton" Content="START" Margin="0,10,10,0" HorizontalAlignment="Right" Width="75" Height="75" VerticalAlignment="Top"/>
+        <Button x:Name="ClickerResetButton" Command="{Binding ClickerResetCommand}" Content="Reset" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
+        <Button x:Name="ClickerButton" Content="{Binding ClickerValue}"  Command="{Binding ClickerCommand}" Margin="0,0,10,35" HorizontalAlignment="Right" Width="75" Height="75" VerticalAlignment="Bottom"/>
+    </Grid>
+</Window>
