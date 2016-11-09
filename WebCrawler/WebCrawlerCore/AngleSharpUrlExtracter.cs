@@ -1,8 +1,6 @@
-﻿
-using System.Collections.Generic;
-using System.Net;
+﻿using System.Collections.Generic;
 using System.Linq;
-using AngleSharp.Dom;
+using AngleSharp.Dom.Html;
 using AngleSharp.Parser.Html;
 
 namespace WebCrawlerCore
@@ -12,16 +10,12 @@ namespace WebCrawlerCore
         public string[] ExtractUrls(string htmlContent)
         {
             List<string> hrefTags = new List<string>();
-            var parser = new HtmlParser();
-            var document = parser.Parse(htmlContent);
-            
-            foreach (IElement element in document.QuerySelectorAll("a"))
-            {
-                hrefTags.Add(element.GetAttribute("href"));
-            }
-
-            return hrefTags.ToArray();
-
+            HtmlParser parser = new HtmlParser();
+            IHtmlDocument document = parser.Parse(htmlContent);
+            return document.QuerySelectorAll("a")
+                .Select(x => x.GetAttribute("href"))
+                .Where(x => !string.IsNullOrEmpty(x))
+                .ToArray();
         }
     }
 }
