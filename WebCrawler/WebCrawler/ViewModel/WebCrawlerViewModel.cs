@@ -12,45 +12,22 @@ namespace WebCrawler.ViewModel
 
         public WebCrawlerViewModel()
         {
-            _clickerCommand = new RelayCommand(() =>
+            ClickerCommand = new RelayCommand(() =>
             {
                 _clickerCount++;
                 OnPropertyChanged("ClickerValue");
             });
-            _clickerResetCommand = new RelayCommand(() =>
+            ClickerResetCommand = new RelayCommand(() =>
             {
                 _clickerCount = 0;
                 OnPropertyChanged("ClickerValue");
             });
         }
 
-        public string ClickerValue
-        {
-            get
-            {
-                return (_clickerCount == 0) ? "Click Me!" : Convert .ToString(_clickerCount);
-            }
-        }
-
-        public ICommand ClickerCommand
-        {
-            get
-            {
-                return _clickerCommand;
-            }
-        }
-
-        public ICommand ClickerResetCommand
-        {
-            get
-            {
-                return _clickerResetCommand;
-            }
-        }
-
+        // Clicker stuff
+        public string ClickerValue => (_clickerCount == 0) ? "Click Me!" : Convert .ToString(_clickerCount);
+        public ICommand ClickerCommand { get; }
+        public ICommand ClickerResetCommand { get; }
         private int _clickerCount = 0;
-        private ICommand _clickerCommand;
-        private ICommand _clickerResetCommand;
-
     }
 }

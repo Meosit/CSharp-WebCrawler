@@ -9,7 +9,7 @@ namespace WebCrawler.ViewModel
 {
     public class RelayCommand : ICommand
     {
-        private Action execute;
+        private readonly Action _execute;
 
         public event EventHandler CanExecuteChanged
         {
@@ -19,7 +19,7 @@ namespace WebCrawler.ViewModel
 
         public RelayCommand(Action execute)
         {
-            this.execute = execute;
+            this._execute = execute;
         }
 
         public bool CanExecute(object parameter)
@@ -29,7 +29,7 @@ namespace WebCrawler.ViewModel
 
         public void Execute(object parameter)
         {
-            this.execute();
+            this._execute();
         }
     }
 }
