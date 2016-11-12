@@ -12,8 +12,7 @@
             <viewModel:WebCrawlerViewModel/>
         </Grid.DataContext>
         <TreeView Grid.Column="0" x:Name="TreeView" Margin="0,0,90,0"/>
-        <Button x:Name="StartButton" Content="Start" Margin="0,10,10,0" HorizontalAlignment="Right" Width="75" Height="75" VerticalAlignment="Top"/>
-        <Button x:Name="StopButton" Content="Force Stop" Margin="0,90,10,0" Height="20" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75"/>
+        <Button x:Name="StartButton" Content="Start" Command="{Binding StartCommand}" Margin="0,10,10,0" HorizontalAlignment="Right" Width="75" Height="75" VerticalAlignment="Top"/>
         <Button x:Name="ClickerResetButton" Command="{Binding ClickerResetCommand}" Content="Reset" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
         <Button x:Name="ClickerButton" Content="{Binding ClickerValue}"  Command="{Binding ClickerCommand}" Margin="0,0,10,35" HorizontalAlignment="Right" Width="75" Height="75" VerticalAlignment="Bottom"/>
     </Grid>

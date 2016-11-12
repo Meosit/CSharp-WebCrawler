@@ -4,46 +4,73 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
+using log4net;
+using log4net.Core;
+using log4net.Repository.Hierarchy;
 
 namespace WebCrawlerCore
 {
-    public class WebCrawler
+    public class WebCrawler : ISimpleWebCrawler
     {
-        private IHtmlUrlExtracter _htmlUrlExtracter;
-        private int _crawlDepth = 0;
+        private readonly ILog _logger;
+        private readonly IHtmlUrlExtracter _htmlUrlExtracter;
 
-        public WebCrawler(IHtmlUrlExtracter extracter)
+        public const int MaxCrawlDepth = 4;
+
+        private int _crawlDepth = MaxCrawlDepth;
+
+        public int CrawlDepth
         {
-            if (extracter == null)
+            get { return _crawlDepth; } 
+            set
+            {
+                if (value > MaxCrawlDepth)
+                {
+                    throw new ArgumentException();
+                }
+                _crawlDepth = value;
+            }
+        }
+
+        public WebCrawler(IHtmlUrlExtracter extracter, int crawlDepth, ILog logger)
+        {
+            if (extracter == null || logger == null)
             {
                 throw new ArgumentNullException();
             }
+            CrawlDepth = crawlDepth;
+            _logger = logger;
             _htmlUrlExtracter = extracter;
         }
 
-        public WebCrawler()
+        public WebCrawler(int crawlDepth, ILog logger)
         {
+            if (logger == null)
+            {
+                throw new ArgumentNullException();
+            }
+            CrawlDepth = crawlDepth;
+            _logger = logger;
             _htmlUrlExtracter = new AngleSharpUrlExtracter();
         }
 
-        public async Task<CrawlResult> CrawlUrls(ICrawlerConfig config)
+
+        public async Task<CrawlResult> PerformCrawlingAsync(string[] rootUrls)
         {
-            string[] urlsToCrawl = config.GetRootUrls();
-            _crawlDepth = config.GetCrawlDepth();
-            return await AsyncCrawlUrls(urlsToCrawl);
+            return await AsyncCrawlUrls(rootUrls);
         }
 
         private async Task<CrawlResult> AsyncCrawlUrls(string[] urlsToCrawl)
         {
             Dictionary<string, CrawlResult> crawledUrls = new Dictionary<string, CrawlResult>();
 
-            for (int i = 0; i < urlsToCrawl.Length; i++)
+            foreach (string url in urlsToCrawl)
             {
-                string[] nestedUrls = await LoadPageAndExtractUniqueUrls(urlsToCrawl[i]);
+                string[] nestedUrls = await LoadPageAndExtractUniqueUrls(url);
                 if (nestedUrls != null)
                 {
                     CrawlResult nestedResult = await CrawlNestedUrls(0, nestedUrls);
-                    crawledUrls.Add(urlsToCrawl[i], nestedResult);
+                    crawledUrls.Add(url, nestedResult);
                 }
             }
 
@@ -56,12 +83,16 @@ namespace WebCrawlerCore
             if (currentDepth <= _crawlDepth)
             {
                 crawledUrls = new Dictionary<string, CrawlResult>();
-
-
-           
+                foreach (string url in urlsToCrawl)
+                {
+                    string[] nestedUrls = await LoadPageAndExtractUniqueUrls(url);
+                    if (nestedUrls != null)
+                    {
+                        CrawlResult nestedResult = await CrawlNestedUrls(currentDepth + 1, nestedUrls);
+                        crawledUrls.Add(url, nestedResult);
+                    }
+                }
             }
-
-
             return new CrawlResult(crawledUrls);
         }
 
@@ -80,7 +111,7 @@ namespace WebCrawlerCore
         }
 
 
-        private static async Task<string> LoadPage(string url)
+        private async Task<string> LoadPage(string url)
         {
             string result = null;
             try
@@ -92,12 +123,12 @@ namespace WebCrawlerCore
             }
             catch (Exception e)
             {
-                // logginig here
+                _logger.Warn("Exception while loading page: " + e.Message);
             }
             return result;
         }
 
-        private static string GetAbsoluteUrl(string parentUrl, string url)
+        private string GetAbsoluteUrl(string parentUrl, string url)
         {
             return !string.IsNullOrEmpty(parentUrl)
                 ? new Uri(new Uri(parentUrl), url).AbsoluteUri

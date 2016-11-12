@@ -1,13 +1,17 @@
 ﻿using System;
 using System.Windows.Input;
+using WebCrawler.Model;
 
 namespace WebCrawler.ViewModel
 {
     class WebCrawlerViewModel : BaseViewModel
     {
 
+        private readonly WebCrawlerModel _model;
+
         public WebCrawlerViewModel()
         {
+            _model = new WebCrawlerModel();
             ClickerCommand = new RelayCommand(() =>
             {
                 _clickerCount++;
