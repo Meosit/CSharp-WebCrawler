@@ -71,7 +71,9 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Model\CrawlConfigException.cs" />
     <Compile Include="Model\WebCrawlerModel.cs" />
+    <Compile Include="Model\XmlCrawlerConfig.cs" />
     <Compile Include="ViewModel\AsyncCommand.cs" />
     <Compile Include="ViewModel\BaseViewModel.cs" />
     <Compile Include="ViewModel\RelayCommand.cs" />
@@ -114,6 +116,9 @@
       <Project>{6DB3E596-CCE5-47A1-917E-711BA6B86413}</Project>
       <Name>WebCrawlerCore</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Model\config.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
