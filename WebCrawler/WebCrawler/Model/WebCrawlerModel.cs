@@ -7,18 +7,21 @@ namespace WebCrawler.Model
 {
     internal class WebCrawlerModel
     {
+        private const string ConfigFilename = "config.xml";
         private readonly ILog _logger = LogManager.GetLogger(typeof(WebCrawlerModel));
         private readonly WebCrawlerCore.WebCrawler _webCrawler;
+        private readonly XmlCrawlerConfig _config;
 
         internal WebCrawlerModel()
         {
-            _webCrawler = new WebCrawlerCore.WebCrawler(4, _logger);
+            _config = new XmlCrawlerConfig(ConfigFilename);
+            _webCrawler = new WebCrawlerCore.WebCrawler(_config.GetCrawlDepth(), _logger);
         }
 
-        //internal Task<CrawlResult> ExecuteCrawling()
-        //{
-        //    return _webCrawler.PerformCrawlingAsync();
-        //}
+        internal Task<CrawlResult> ExecuteCrawlingAsync()
+        {
+            return _webCrawler.PerformCrawlingAsync(_config.GetRootUrls());
+        }
 
     }
 }

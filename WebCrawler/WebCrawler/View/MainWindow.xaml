@@ -3,15 +3,20 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:WebCrawler"
         xmlns:viewModel="clr-namespace:WebCrawler.ViewModel"
+        xmlns:view="clr-namespace:WebCrawler.View"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
+        Title="Crawler" Height="350" Width="525">
+    <Window.Resources>
+        <view:CrawlResultConverter x:Key="CrawlResultConverter"/>
+    </Window.Resources>
+
     <Grid>
         <Grid.DataContext>
             <viewModel:WebCrawlerViewModel/>
         </Grid.DataContext>
-        <TreeView Grid.Column="0" x:Name="TreeView" Margin="0,0,90,0"/>
+
+        <TreeView Grid.Column="0" x:Name="TreeView" Margin="0,0,90,0" ItemsSource="{Binding Path=CrawlResult, Converter={StaticResource CrawlResultConverter}}"/>
         <Button x:Name="StartButton" Content="Start" Command="{Binding StartCommand}" Margin="0,10,10,0" HorizontalAlignment="Right" Width="75" Height="75" VerticalAlignment="Top"/>
         <Button x:Name="ClickerResetButton" Command="{Binding ClickerResetCommand}" Content="Reset" Margin="0,0,10,10" HorizontalAlignment="Right" Width="75" Height="20" VerticalAlignment="Bottom"/>
         <Button x:Name="ClickerButton" Content="{Binding ClickerValue}"  Command="{Binding ClickerCommand}" Margin="0,0,10,35" HorizontalAlignment="Right" Width="75" Height="75" VerticalAlignment="Bottom"/>
