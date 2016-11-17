@@ -14,23 +14,14 @@ namespace WebCrawler.Model
 
         internal WebCrawlerModel()
         {
-            try
-            {
-                _config = (ICrawlerConfig) ConfigurationManager.GetSection("crawler");
-            }
-            catch (Exception e)
-            {
-                _logger.Error("Config error", e);
-                throw new CrawlConfigException("", e);
-            }
-            
-            _webCrawler = new WebCrawlerCore.WebCrawler(_config.GetCrawlDepth(), _logger);
+            _webCrawler = new WebCrawlerCore.WebCrawler(WebCrawlerCore.WebCrawler.MaxCrawlDepth, _logger);
         }
 
         internal Task<CrawlResult> ExecuteCrawlingAsync()
         {
-            return _webCrawler.PerformCrawlingAsync(_config.GetRootUrls());
+            ICrawlerConfig config = (ICrawlerConfig) ConfigurationManager.GetSection("crawler");
+            _webCrawler.CrawlDepth = config.GetCrawlDepth();
+            return _webCrawler.PerformCrawlingAsync(config.GetRootUrls());
         }
-
     }
 }

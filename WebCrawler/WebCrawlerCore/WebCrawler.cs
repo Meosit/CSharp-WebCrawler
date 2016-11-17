@@ -34,10 +34,9 @@ namespace WebCrawlerCore
 
         public WebCrawler(IHtmlUrlExtracter extracter, int crawlDepth, ILog logger)
         {
-            if (extracter == null || logger == null)
-            {
-                throw new ArgumentNullException();
-            }
+            if (extracter == null) throw new ArgumentNullException(nameof(extracter));
+            if (logger == null) throw new ArgumentNullException(nameof(logger));
+
             CrawlDepth = crawlDepth;
             _logger = logger;
             _htmlUrlExtracter = extracter;
@@ -102,7 +101,8 @@ namespace WebCrawlerCore
             string page = await LoadPage(url);
             if (page != null)
             {
-                result = _htmlUrlExtracter.ExtractUrls(page)
+                result = _htmlUrlExtracter
+                    .ExtractUrls(page)
                     .Select(x => GetAbsoluteUrl(url, x))
                     .Distinct()
                     .ToArray();

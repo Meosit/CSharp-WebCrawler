@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using System.Windows.Input;
 using WebCrawler.Model;
 using WebCrawlerCore;
@@ -28,7 +29,18 @@ namespace WebCrawler.ViewModel
                 if (StartCommand.CanExecute)
                 {
                     StartCommand.CanExecute = false;
-                    CrawlResult = await _model.ExecuteCrawlingAsync();
+                    try
+                    {
+                        CrawlResult = await _model.ExecuteCrawlingAsync();
+                    }
+                    catch (CrawlConfigException e)
+                    {
+                        StatusValue = $"Config error, Restart your program! ({e.Message})";
+                    }
+                    catch (Exception e)
+                    {
+                        StatusValue = $"Error! {e.Message}";
+                    }
                     StartCommand.CanExecute = true;
                 }
             });
@@ -55,6 +67,21 @@ namespace WebCrawler.ViewModel
         public string ClickerValue => (_clickerCount == 0) ? "Click Me!" : Convert .ToString(_clickerCount);
         public ICommand ClickerCommand { get; }
         public ICommand ClickerResetCommand { get; }
+
+        private string _statusValue;
+        public string StatusValue
+        {
+            get { return _statusValue; }
+            set
+            {
+                if (_statusValue != value)
+                {
+                    _statusValue = value;
+                    OnPropertyChanged();
+                }
+            }
+        }
+
         private int _clickerCount = 0;
         private CrawlResult _crawlResult;
     }
