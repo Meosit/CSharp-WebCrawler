@@ -49,8 +49,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AngleSharpUrlExtracter.cs" />
+    <Compile Include="Config\AppCrawlerConfig.cs" />
+    <Compile Include="Config\CrawlerConfigSectionHandler.cs" />
     <Compile Include="CrawlResult.cs" />
-    <Compile Include="ICrawlerConfig.cs" />
+    <Compile Include="Config\ICrawlerConfig.cs" />
     <Compile Include="IHtmlUrlExtracter.cs" />
     <Compile Include="ISimpleWebCrawler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -59,6 +61,7 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

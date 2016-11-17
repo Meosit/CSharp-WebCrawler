@@ -130,9 +130,11 @@ namespace WebCrawlerCore
 
         private string GetAbsoluteUrl(string parentUrl, string url)
         {
-            return !string.IsNullOrEmpty(parentUrl)
+            _logger.Debug($"Parent url {parentUrl} || Url {url}");
+            string absoluteUrl = !string.IsNullOrEmpty(parentUrl)
                 ? new Uri(new Uri(parentUrl), url).AbsoluteUri
                 : url;
+            return absoluteUrl;
         }
     }
 }

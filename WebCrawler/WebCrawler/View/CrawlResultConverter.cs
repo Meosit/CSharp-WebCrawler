@@ -32,13 +32,17 @@ namespace WebCrawler.View
         private static IEnumerable<TreeViewItem> CrawlResultToTreeViewItems(CrawlResult crawlResult)
         {
             var result = new List<TreeViewItem>();
+            if (crawlResult.Urls == null)
+            {
+                return result;
+            }
             foreach (var url in crawlResult.Urls)
             {
-                TreeViewItem treeViewItem = new TreeViewItem() { Header = url.Key };
+                TreeViewItem treeViewItem = new TreeViewItem() {Header = url.Key};
+
                 foreach (TreeViewItem nestedTreeViewItem in CrawlResultToTreeViewItems(url.Value))
                 {
                     treeViewItem.Items.Add(nestedTreeViewItem);
-
                 }
                 result.Add(treeViewItem);
             }
